@@ -267,7 +267,7 @@ def trainModel(model):
         fname = path + str(filename) + ".hdf5"
         model.save_weights(fname, overwrite=True)
     else:
-        model.save_weights("newWeight.hdf5", overwrite=True)
+        model.save_weights("newWeight.weights.h5", overwrite=True)
         
     visualizeHis(hist)
 
