@@ -42,7 +42,7 @@ batch_size = 32
 nb_classes = 5
 
 # Number of epochs to train
-nb_epoch = 50
+nb_epoch = 70
 
 # Total number of convolutional filters to use
 nb_filters = 32
@@ -142,14 +142,14 @@ def loadCNN(bTraining = False):
     model.get_config()
     
     if not bTraining:
-        WeightFileName = modlistdir('.','.h5')
+        WeightFileName = modlistdir('./models/','.h5')
         if len(WeightFileName) == 0:
             print('Error: No pretrained weight file found.')
             return 0
         else:
             print('Found these weight files - {}'.format(WeightFileName))
         w = int(input("Which weight file to load (enter the INDEX, starting from 0): "))
-        fname = WeightFileName[int(w)]
+        fname = './models/' + WeightFileName[int(w)]
         print("loading ", fname)
         model.load_weights(fname)
 
@@ -193,7 +193,7 @@ def guessGesture(model, img):
     guess = max(d.items(), key=operator.itemgetter(1))[0]
     prob  = d[guess]
 
-    if prob > 20.0:
+    if prob > 40.0:
         jsonarray = d
         return output.index(guess)
     else:
@@ -299,6 +299,7 @@ def visualizeHis(hist):
     plt.grid(True)
     plt.legend(['train','val'], loc=4)
 
+    plt.savefig('./training_history.png')
     plt.show()
 
 #%%
@@ -351,7 +352,7 @@ def visualizeLayer(model, img, input_image, layerIndex):
     # output_image = activations
 
     # Create a new model that outputs the desired layer's activation
-    activation_model = Model(inputs=model.input, outputs=layer.output)
+    activation_model = Model(inputs=model.inputs, outputs=layer.output)
     activations = activation_model.predict(input_image)
     output_image = activations
 
