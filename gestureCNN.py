@@ -42,7 +42,7 @@ batch_size = 32
 nb_classes = 5
 
 # Number of epochs to train
-nb_epoch = 100
+nb_epoch = 30
 
 # Total number of convolutional filters to use
 nb_filters = 32
