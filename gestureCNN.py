@@ -42,7 +42,7 @@ batch_size = 32
 nb_classes = 5
 
 # Number of epochs to train
-nb_epoch = 15
+nb_epoch = 50
 
 # Total number of convolutional filters to use
 nb_filters = 32
@@ -142,7 +142,7 @@ def loadCNN(bTraining = False):
     model.get_config()
     
     if not bTraining:
-        WeightFileName = modlistdir('.','.hdf5')
+        WeightFileName = modlistdir('.','.h5')
         if len(WeightFileName) == 0:
             print('Error: No pretrained weight file found.')
             return 0
@@ -193,7 +193,7 @@ def guessGesture(model, img):
     guess = max(d.items(), key=operator.itemgetter(1))[0]
     prob  = d[guess]
 
-    if prob > 60.0:
+    if prob > 20.0:
         jsonarray = d
         return output.index(guess)
     else:
