@@ -193,7 +193,7 @@ def guessGesture(model, img):
     guess = max(d.items(), key=operator.itemgetter(1))[0]
     prob  = d[guess]
 
-    if prob > 40.0:
+    if prob > 50.0:
         jsonarray = d
         return output.index(guess)
     else:
@@ -300,7 +300,7 @@ def visualizeHis(hist):
     plt.grid(True)
     plt.legend(['train','val'], loc=4)
 
-    plt.savefig('./training_history_22.png')
+    plt.savefig('./history/training_history.png')
     # plt.show()
 
 
@@ -340,8 +340,8 @@ def visualize_training_history(history) -> None:
     ax2.grid(True)
 
     plt.tight_layout()
-    plt.savefig("./models/training_history.png")
-    print("Training hisotry saved to: ./models/training_history.png")
+    plt.savefig("./history/training_history_all.png")
+    print("Training hisotry saved to: ./history/training_history_all.png")
     
     # We are in a non-interactive backend, so we don't call plt.show()
     # plt.show()
