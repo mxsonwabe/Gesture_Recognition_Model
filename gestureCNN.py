@@ -264,7 +264,7 @@ def trainModel(model):
     ans = input("Do you want to save the trained weights - y/n ?")
     if ans == 'y':
         filename = input("Enter file name - ")
-        fname = path + str(filename) + ".hdf5"
+        fname = path + str(filename) + ".weights.h5"
         model.save_weights(fname, overwrite=True)
     else:
         model.save_weights("newWeight.weights.h5", overwrite=True)
