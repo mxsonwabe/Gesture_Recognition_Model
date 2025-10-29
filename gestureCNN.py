@@ -267,9 +267,10 @@ def trainModel(model):
         fname = path + str(filename) + ".weights.h5"
         model.save_weights(fname, overwrite=True)
     else:
-        model.save_weights("newWeight.weights.h5", overwrite=True)
+        model.save_weights("0-newWeight.weights.h5", overwrite=True)
         
     visualizeHis(hist)
+    visualize_training_history(hist)
 
 #%%
 def visualizeHis(hist):
@@ -299,7 +300,50 @@ def visualizeHis(hist):
     plt.grid(True)
     plt.legend(['train','val'], loc=4)
 
-    plt.savefig('./training_history.png')
+    plt.savefig('./training_history_22.png')
+    # plt.show()
+
+
+def visualize_training_history(history) -> None:
+    """
+    Creates plots showing how the model improved during the training.
+
+    Args:
+        history: History object returned by model.fit()
+    """
+    # extract training metrics
+    train_loss = history.history["loss"]
+    val_loss = history.history["val_loss"]
+    train_acc = history.history["accuracy"]
+    val_acc = history.history["val_accuracy"]
+    epochs = range(1, len(train_loss) + 1)
+
+    # create figure with 2 subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+    # plot loss
+    ax1.plot(epochs, train_loss, "-b", label="Training Loss")
+    ax1.plot(epochs, val_loss, "r-", label="Validation Loss")
+    ax1.set_xlabel("Epoch")
+    ax1.set_ylabel("Loss")
+    ax1.set_title("Training vs Validation Loss")
+    ax1.legend()
+    ax1.grid(True)
+
+    # Plot accuracy
+    ax2.plot(epochs, train_acc, "b-", label="Training Accuracy")
+    ax2.plot(epochs, val_acc, "r-", label="Validation Accuracy")
+    ax2.set_xlabel("Epoch")
+    ax2.set_ylabel("Accuracy")
+    ax2.set_title("Training vs Validation Accuracy")
+    ax2.legend()
+    ax2.grid(True)
+
+    plt.tight_layout()
+    plt.savefig("./models/training_history.png")
+    print("Training hisotry saved to: ./models/training_history.png")
+    
+    # We are in a non-interactive backend, so we don't call plt.show()
     # plt.show()
 
 #%%
