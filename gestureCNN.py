@@ -267,7 +267,7 @@ def trainModel(model):
         fname = path + str(filename) + ".weights.h5"
         model.save_weights(fname, overwrite=True)
     else:
-        model.save_weights("0-newWeight.weights.h5", overwrite=True)
+        model.save_weights("1-newWeight.weights.h5", overwrite=True)
         
     visualizeHis(hist)
     visualize_training_history(hist)
