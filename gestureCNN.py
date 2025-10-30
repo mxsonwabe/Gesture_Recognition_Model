@@ -14,7 +14,8 @@ from tensorflow.keras.utils import to_categorical  # Changed: np_utils -> to_cat
 from tensorflow.keras import backend as K
 
 # Set image data format
-K.set_image_data_format('channels_first')
+# K.set_image_data_format('channels_first') # <-- ORIGINAL
+K.set_image_data_format('channels_last') # <-- FIX: Changed to channels_last for CPU compatibility
 	
 import numpy as np
 import os
@@ -43,7 +44,7 @@ batch_size = 32
 nb_classes = 5
 
 # Number of epochs to train
-nb_epoch = 20
+nb_epoch = 15
 
 # Total number of convolutional filters to use
 nb_filters = 32
@@ -62,38 +63,6 @@ WeightFileName = []
 
 # outputs
 output = ["OK", "NOTHING","PEACE", "PUNCH", "STOP"]
-
-# Dynamically extract gesture classes from imgfolder_b
-import re
-
-def extract_gesture_classes(path2):
-    """Extract unique gesture class names from image files in path2"""
-    gesture_set = set()
-    
-    # List all files in the directory
-    import os
-    if os.path.exists(path2):
-        files = os.listdir(path2)
-        for file in files:
-            # Skip hidden files
-            if file.startswith('.'):
-                continue
-            # Extract gesture name from filename (e.g., 'call123.png' -> 'call')
-            match = re.match(r'^([a-zA-Z]+)\d+\.png$', file)
-            if match:
-                gesture_name = match.group(1)
-                gesture_set.add(gesture_name.upper())
-    
-    # Return sorted list for consistent ordering
-    return sorted(list(gesture_set))
-
-# Extract gesture classes dynamically
-output = extract_gesture_classes(path2)
-
-# Update nb_classes based on detected gestures
-nb_classes = len(output)
-
-print(f"Detected {nb_classes} gesture classes: {output}")
 
 jsonarray = {}
 
@@ -151,7 +120,8 @@ def loadCNN(bTraining = False):
     
     model.add(Conv2D(nb_filters, (nb_conv, nb_conv),
                         padding='valid',
-                        input_shape=(img_channels, img_rows, img_cols)))
+                        # input_shape=(img_channels, img_rows, img_cols))) # <-- ORIGINAL
+                        input_shape=(img_rows, img_cols, img_channels))) # <-- FIX: Changed to channels_last
     convout1 = Activation('relu')
     model.add(convout1)
     model.add(Conv2D(nb_filters, (nb_conv, nb_conv)))
@@ -200,7 +170,8 @@ def guessGesture(model, img):
     image = np.array(img).flatten()
     
     # reshape it
-    image = image.reshape(img_channels, img_rows, img_cols)
+    # image = image.reshape(img_channels, img_rows, img_cols) # <-- ORIGINAL
+    image = image.reshape(img_rows, img_cols, img_channels) # <-- FIX: Changed to channels_last
     
     # float32
     image = image.astype('float32') 
@@ -209,7 +180,8 @@ def guessGesture(model, img):
     image = image / 255
     
     # reshape for NN
-    rimage = image.reshape(1, img_channels, img_rows, img_cols)
+    # rimage = image.reshape(1, img_channels, img_rows, img_cols) # <-- ORIGINAL
+    rimage = image.reshape(1, img_rows, img_cols, img_channels) # <-- FIX: Changed to channels_last
     
     # Get predictions
     prob_array = model.predict(rimage, verbose=0)
@@ -269,8 +241,10 @@ def initializers():
     # Split X and y into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=4)
      
-    X_train = X_train.reshape(X_train.shape[0], img_channels, img_rows, img_cols)
-    X_test = X_test.reshape(X_test.shape[0], img_channels, img_rows, img_cols)
+    # X_train = X_train.reshape(X_train.shape[0], img_channels, img_rows, img_cols) # <-- ORIGINAL
+    # X_test = X_test.reshape(X_test.shape[0], img_channels, img_rows, img_cols) # <-- ORIGINAL
+    X_train = X_train.reshape(X_train.shape[0], img_rows, img_cols, img_channels) # <-- FIX: Changed to channels_last
+    X_test = X_test.reshape(X_test.shape[0], img_rows, img_cols, img_channels) # <-- FIX: Changed to channels_last
      
     X_train = X_train.astype('float32')
     X_test = X_test.astype('float32')
@@ -300,7 +274,7 @@ def trainModel(model):
         fname = path + str(filename) + ".weights.h5"
         model.save_weights(fname, overwrite=True)
     else:
-        model.save_weights("3-newWeight.weights.h5", overwrite=True)
+        model.save_weights("2-newWeight.weights.h5", overwrite=True)
         
     visualizeHis(hist)
     visualize_training_history(hist)
@@ -333,7 +307,7 @@ def visualizeHis(hist):
     plt.grid(True)
     plt.legend(['train','val'], loc=4)
 
-    plt.savefig('./history/training_history_3.png')
+    plt.savefig('./history/training_history_2.png')
     # plt.show()
 
 
@@ -374,7 +348,7 @@ def visualize_training_history(history) -> None:
 
     plt.tight_layout()
     plt.savefig("./history/training_history_all.png")
-    print("Training hisotry saved to: ./history/training_history_all_3.png")
+    print("Training hisotry saved to: ./history/training_history_all_2.png")
     
     # We are in a non-interactive backend, so we don't call plt.show()
     # plt.show()
@@ -398,7 +372,8 @@ def visualizeLayers(model):
         print('Guessed Gesture is {}'.format(output[guessGesture(model, image)]))
         
         # reshape it
-        image = image.reshape(img_channels, img_rows, img_cols)
+        # image = image.reshape(img_channels, img_rows, img_cols) # <-- ORIGINAL
+        image = image.reshape(img_rows, img_cols, img_channels) # <-- FIX: Changed to channels_last
         
         # float32
         image = image.astype('float32')
@@ -407,7 +382,8 @@ def visualizeLayers(model):
         image = image / 255
         
         # reshape for NN
-        input_image = image.reshape(1, img_channels, img_rows, img_cols)
+        # input_image = image.reshape(1, img_channels, img_rows, img_cols) # <-- ORIGINAL
+        input_image = image.reshape(1, img_rows, img_cols, img_channels) # <-- FIX: Changed to channels_last
     else:
         print('Wrong file index entered !!')
         return
@@ -435,7 +411,7 @@ def visualizeLayer(model, img, input_image, layerIndex):
 
     ## If 4 dimensional then take the last dimension value as it would be no of filters
     if output_image.ndim == 4:
-        output_image = np.moveaxis(output_image, 1, 3)
+        # output_image = np.moveaxis(output_image, 1, 3) # <-- ORIGINAL (No longer needed for channels_last)
         
         print("Dumping filter data of layer{} - {}".format(layerIndex, layer.__class__.__name__))
         filters = output_image.shape[3]
