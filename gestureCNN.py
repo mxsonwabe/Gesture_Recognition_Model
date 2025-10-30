@@ -27,6 +27,7 @@ import json
 
 import cv2
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 
 # input image dimensions
@@ -42,7 +43,7 @@ batch_size = 32
 nb_classes = 5
 
 # Number of epochs to train
-nb_epoch = 30
+nb_epoch = 20
 
 # Total number of convolutional filters to use
 nb_filters = 32
@@ -61,6 +62,38 @@ WeightFileName = []
 
 # outputs
 output = ["OK", "NOTHING","PEACE", "PUNCH", "STOP"]
+
+# Dynamically extract gesture classes from imgfolder_b
+import re
+
+def extract_gesture_classes(path2):
+    """Extract unique gesture class names from image files in path2"""
+    gesture_set = set()
+    
+    # List all files in the directory
+    import os
+    if os.path.exists(path2):
+        files = os.listdir(path2)
+        for file in files:
+            # Skip hidden files
+            if file.startswith('.'):
+                continue
+            # Extract gesture name from filename (e.g., 'call123.png' -> 'call')
+            match = re.match(r'^([a-zA-Z]+)\d+\.png$', file)
+            if match:
+                gesture_name = match.group(1)
+                gesture_set.add(gesture_name.upper())
+    
+    # Return sorted list for consistent ordering
+    return sorted(list(gesture_set))
+
+# Extract gesture classes dynamically
+output = extract_gesture_classes(path2)
+
+# Update nb_classes based on detected gestures
+nb_classes = len(output)
+
+print(f"Detected {nb_classes} gesture classes: {output}")
 
 jsonarray = {}
 
@@ -267,7 +300,7 @@ def trainModel(model):
         fname = path + str(filename) + ".weights.h5"
         model.save_weights(fname, overwrite=True)
     else:
-        model.save_weights("2-newWeight.weights.h5", overwrite=True)
+        model.save_weights("3-newWeight.weights.h5", overwrite=True)
         
     visualizeHis(hist)
     visualize_training_history(hist)
@@ -300,7 +333,7 @@ def visualizeHis(hist):
     plt.grid(True)
     plt.legend(['train','val'], loc=4)
 
-    plt.savefig('./history/training_history_2.png')
+    plt.savefig('./history/training_history_3.png')
     # plt.show()
 
 
@@ -341,7 +374,7 @@ def visualize_training_history(history) -> None:
 
     plt.tight_layout()
     plt.savefig("./history/training_history_all.png")
-    print("Training hisotry saved to: ./history/training_history_all_2.png")
+    print("Training hisotry saved to: ./history/training_history_all_3.png")
     
     # We are in a non-interactive backend, so we don't call plt.show()
     # plt.show()
