@@ -198,7 +198,7 @@ def guessGesture(model, img):
     guess = max(d.items(), key=operator.itemgetter(1))[0]
     prob  = d[guess]
 
-    if prob > 50.0:
+    if prob > 60.0:
         jsonarray = d
         return output.index(guess)
     else:
@@ -274,7 +274,7 @@ def trainModel(model):
         fname = path + str(filename) + ".weights.h5"
         model.save_weights(fname, overwrite=True)
     else:
-        model.save_weights("2-newWeight.weights.h5", overwrite=True)
+        model.save_weights("newWeight.weights.h5", overwrite=True)
         
     visualizeHis(hist)
     visualize_training_history(hist)
@@ -307,7 +307,7 @@ def visualizeHis(hist):
     plt.grid(True)
     plt.legend(['train','val'], loc=4)
 
-    plt.savefig('./history/training_history_2.png')
+    plt.savefig('./history/training_history_newWeights.png')
     # plt.show()
 
 
@@ -348,7 +348,7 @@ def visualize_training_history(history) -> None:
 
     plt.tight_layout()
     plt.savefig("./history/training_history_all.png")
-    print("Training hisotry saved to: ./history/training_history_all_2.png")
+    print("Training hisotry saved to: ./history/training_history_all_newWeights.png")
     
     # We are in a non-interactive backend, so we don't call plt.show()
     # plt.show()
