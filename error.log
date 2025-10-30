@@ -1,0 +1,93 @@
+❯ uv run trackgesture.py 
+/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/trackgesture.py:45: SyntaxWarning: invalid escape sequence '\i'
+  2- Train the model (you will require image samples for training under .\imgfolder)
+2025-10-30 12:45:39.394350: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2025-10-30 12:45:39.644566: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-10-30 12:45:47.413364: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+
+What would you like to do ?
+    1- Use pretrained model for gesture recognition & layer visualization
+    2- Train the model (you will require image samples for training under .\imgfolder)
+    3- Visualize feature maps of different layers of trained model
+    4- Exit	
+    2
+/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/layers/convolutional/base_conv.py:113: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(activity_regularizer=activity_regularizer, **kwargs)
+2025-10-30 12:45:58.518242: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+Model: "sequential"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ conv2d (Conv2D)                      │ (None, 32, 198, 198)        │             320 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ activation (Activation)              │ (None, 32, 198, 198)        │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_1 (Conv2D)                    │ (None, 32, 196, 196)        │           9,248 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ activation_1 (Activation)            │ (None, 32, 196, 196)        │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d (MaxPooling2D)         │ (None, 32, 98, 98)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dropout (Dropout)                    │ (None, 32, 98, 98)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flatten (Flatten)                    │ (None, 307328)              │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense (Dense)                        │ (None, 128)                 │      39,338,112 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ activation_2 (Activation)            │ (None, 128)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dropout_1 (Dropout)                  │ (None, 128)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense_1 (Dense)                      │ (None, 5)                   │             645 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ activation_3 (Activation)            │ (None, 5)                   │               0 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 39,348,325 (150.10 MB)
+ Trainable params: 39,348,325 (150.10 MB)
+ Non-trainable params: 0 (0.00 B)
+(4015, 40000)
+Press any key
+samples_per_class -  803
+Epoch 1/20
+Traceback (most recent call last):
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/trackgesture.py", line 367, in <module>
+    Main()
+    ~~~~^^
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/trackgesture.py", line 208, in Main
+    myNN.trainModel(mod)
+    ~~~~~~~~~~~~~~~^^^^^
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/gestureCNN.py", line 262, in trainModel
+    hist = model.fit(X_train, Y_train, batch_size=batch_size, epochs=nb_epoch,
+                 verbose=1, validation_split=0.2)
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/utils/traceback_utils.py", line 122, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/tensorflow/python/eager/execute.py", line 59, in quick_execute
+    except TypeError as e:
+    ...<5 lines>...
+      raise e
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Graph execution error:
+
+Detected at node gradient_tape/sequential_1/conv2d_1_2/convolution/Conv2DBackpropFilter defined at (most recent call last):
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/trackgesture.py", line 367, in <module>
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/trackgesture.py", line 208, in Main
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/gestureCNN.py", line 262, in trainModel
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/backend/tensorflow/trainer.py", line 399, in fit
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/backend/tensorflow/trainer.py", line 241, in function
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/backend/tensorflow/trainer.py", line 154, in multi_step_on_iterator
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/backend/tensorflow/trainer.py", line 125, in wrapper
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/backend/tensorflow/trainer.py", line 134, in one_step_on_data
+
+  File "/home/maso/Projects/python/computer_vision/Gesture_Recognition_Project_Final/.venv/lib64/python3.13/site-packages/keras/src/backend/tensorflow/trainer.py", line 81, in train_step
+
+Conv2DCustomBackpropFilterOp only supports NHWC.
+	[[{{node gradient_tape/sequential_1/conv2d_1_2/convolution/Conv2DBackpropFilter}}]] [Op:__inference_multi_step_on_iterator_1843]
